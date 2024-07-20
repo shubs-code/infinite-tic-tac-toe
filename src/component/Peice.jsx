@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 
-const Peice = ({isXturn, setIsXturn, pos}) => {
+const Peice = ({isXturn, setIsXturn, pos, onUpdateCard, cardValue}) => {
     const [card, setCard] = useState("");
     const [cardFade, setCardFade] = useState(false);
     const [turnCount, setTurnCount] = useState(0);
@@ -8,11 +8,11 @@ const Peice = ({isXturn, setIsXturn, pos}) => {
     useEffect(()=>{
         if(card!=""){
             if(turnCount >= 6){
-                console.log(pos, card, turnCount);
                 setTurnCount(0);
                 setCard("");
                 setCardFade(false);
             }else if(turnCount == 5){
+                onUpdateCard(pos, "");
                 setCardFade(true);
                 setTurnCount(turnCount+1);
             }else{
@@ -22,14 +22,15 @@ const Peice = ({isXturn, setIsXturn, pos}) => {
     },[isXturn]);
 
     const onCardClick = ()=>{
-        console.log('click')
-        if(card!=""){
+        if(cardValue != undefined || card!=""){
             return;
         }
         if(isXturn){
             setCard("x");
+            onUpdateCard(pos, "x");
         }else{
             setCard("o");
+            onUpdateCard(pos, "o");
         }
         setIsXturn(!isXturn);
     }
@@ -38,10 +39,10 @@ const Peice = ({isXturn, setIsXturn, pos}) => {
             onClick={onCardClick}
         >
             {
-                card=='x' && <img src='/x.png'/>
+                (cardValue??card)=='x' && <img src='/x.png'/>
             }
             {
-                card=='o' && <img src='/o.png'/>
+                (cardValue??card)=='o' && <img src='/o.png'/>
             }
         </div>
     )
